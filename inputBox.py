@@ -1,9 +1,11 @@
 from cmu_112_graphics import *
-
+import string
 class InputBox(object):
-    def __init__(self, name, coord):
+    def __init__(self, name, defaultVal, coord):
         self.name = name
         self.coord = coord
+        self.defaultVal = defaultVal
+        self.value = defaultVal
 
     def set_name(self):
         self.name = name
@@ -16,21 +18,7 @@ class InputBox(object):
     
     def set_coord(self, coord):
         self.coord = coord
-
-class RectButton(InputBox):
-    def __init__(self, name, redirect, coord):
-        super().__init__(name, coord)
-        self.redirect = redirect
-
-    def on_redirect(self):
-        return self.redirect 
-
-class TextBox(InputBox):
-    def __init__(self, name, coord, defaultVal):
-        super().__init__(name, coord)
-        self.defaultVal = defaultVal
-        self.value = defaultVal
-
+    
     def set_defaultVal(self, defaultVal):
         self.defaultVal = defaultVal
 
@@ -42,3 +30,36 @@ class TextBox(InputBox):
 
     def get_value(self):
         return self.value 
+
+class RectButton(InputBox):
+    def __init__(self, name, redirect, defaultVal, coord):
+        super().__init__(name, defaultVal, coord)
+        self.redirect = redirect
+
+    def get_redirect(self):
+        return self.redirect 
+
+class TextBox(InputBox):
+    def __init__(self, name, defaultVal, coord, valid_characters):
+        super().__init__(name, defaultVal, coord)
+        self.valid_characters = valid_characters
+
+    def set_valid_characters(self, characters):
+        self.valid_characters = characters
+    
+    def get_valid_characters(self):
+        return self.valid_characters
+
+class NumTextBox(TextBox):
+    def __init__(self, name, defaultVal, coord):
+        super().__init__(name, defaultVal, coord, string.digits)
+
+    def set_value(self, value):
+        try:
+            value = int(value)
+            self.value = value
+        except:
+            self.value = 0
+
+    def get_value(self):
+        return int(self.value)
