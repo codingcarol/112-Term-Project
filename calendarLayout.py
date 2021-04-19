@@ -1,6 +1,7 @@
 from cmu_112_graphics import *
 from inputBox import * 
 from typing import *
+from date_functions import *
 
 ##############################
 #LAYOUT MANAGERS
@@ -70,6 +71,38 @@ def get_row_and_col_bounds(app, row, col, x0, x1, y0, y1):
     x0, x1 = get_col_bounds(app, col, x0, x1)
     return (x0, y0, x1, y1)
 
+def get_y_time_estimate(topCol, bottomCol, t):
+    return topCol + ((bottomCol - topCol) * (int(t.split(":")[1]))/60)
+
+def get_event_bounds(app, cal_event, x0, y0, x1, y1):
+    col = row1 = row2 = None
+    col = get_week_day_index(date.fromisoformat(cal_event['date']))
+    newX0, newX1 = get_col_bounds(app, col, x0, x1)
+    start_time = cal_event['start_time']
+    end_time = cal_event['end_time']
+    app_hours = app.hours[app.firstHour:app.lastHour + 1]
+    shown_hours = to_24_hr_time(app_hours)
+    if (is_time_greater(end_time, shown_hours[0]) and 
+    is_time_greater(shown_hours[0], start_time)):
+        start_time = shown_hours[0]
+    elif (is_time_greater(end_time, shown_hours[-1]) and
+    is_time_greater(shown_hours[-1], start_time)):
+        end_time = shown_hours[-1]
+    elif (is_time_greater(shown_hours[-1], end_time) and
+    is_time_greater(start_time, shown_hours[0])):
+        pass
+    else: 
+        return None
+    if end_time == start_time:
+        return None
+    t1_index = shown_hours.index(get_nearest_low_time(start_time))
+    t2_index = shown_hours.index(get_nearest_low_time(end_time))
+    topColY0,  topColY1 = get_row_bounds(app, t1_index, y0, y1)
+    bottomColY0, bottomColY1= get_row_bounds(app, t2_index, y0, y1)
+    newY0 = get_y_time_estimate(topColY0,  topColY1, start_time)
+    newY1 = get_y_time_estimate(bottomColY0, bottomColY1, end_time)
+    return (newX0, newY0, newX1, newY1)
+
 def calendar_option_btns(app, init):
     x0, y0, x1, y1 = layout_manager(app, "right_panel")
     padding = 20
@@ -134,4 +167,3 @@ def calendar_select_input(app, init):
     startX0 = panelCenter - selector_width//2 + padding*2
     cal_select_move_btns(app, init, x0, y0, x1, y1, btn_length)
     cal_select_date_btns(app, init, startX0, y0, x1, y1, input_length, padding)
-    

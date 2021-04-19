@@ -1,0 +1,10 @@
+strict events
+id, title, date, start_time, end_time, description
+
+recurring strict events
+id, title, recurring_start, recurring_start, start_time, end_time, recurrence_type, week_days, description
+
+flexible
+id, title, recurring_start, recurring_start, duration, recurrence_type, week_days, description
+
+strict and recurring events are ordered

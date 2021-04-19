@@ -1,6 +1,7 @@
 from datetime import date
 import datetime
 import calendar
+from event_functions import *
 
 #CITATION: https://docs.python.org/3/library/datetime.html
 #CITATION: https://docs.python.org/3/library/calendar.html
@@ -32,6 +33,7 @@ def change_current_date(app, year, month, day, useArrowKeys):
     app.calSelectorInputs[0].set_value(app.currentDate.year)
     app.calSelectorInputs[1].set_value(app.currentDate.month)
     app.calSelectorInputs[2].set_value(app.currentDate.day)
+    app.schedule = construct_strict_schedule(app)
 
 def get_value_in_range(entry, bounds):
     lower, upper = bounds
@@ -77,6 +79,52 @@ def get_next_year(year):
         return None
     else:
         return year + 1
+
+def get_week_day_start(app, week):
+    return week[0][1]
+
+def get_week_day_end(app, week):
+    return week[-1][1]
+
+def get_week_day_index(day):
+    return (day.weekday() + 1) % 7
+
+def get_time_index(time):
+    time = int(time.split(":")[0])
+    return time
+
+def get_nearest_low_time(time):
+    time = time.split(":")[0] + ":00"
+    return time
+
+def get_nearest_high_time(time):
+    time = str(int(time.split(":")[0]) + 1) + ":00"
+    return time
+
+def to_24_hr_time(times_list):
+    new_times = []
+    for t in times_list:
+        if "A" in t:
+            if "12" in t.split(" ")[0]:
+                new_times.append("0:00")
+            else:
+                new_times.append(t.split(" ")[0])
+        else:
+            t_index = get_time_index(t.split(" ")[0]) + 12
+            if t_index == 24:
+                new_times.append(t.split(" ")[0])
+            else:
+                new_times.append(str(t_index) + ":" + t.split(" ")[0].split(":")[1])
+    return new_times
+
+def is_time_greater(t1, t2):
+    if get_time_index(t1) >= get_time_index(t2):
+        return True
+    elif (get_time_index(t1) == get_time_index(t2) and 
+    int(t1.split(":")[1]) >= int(t2.split(":")[1])):
+        return True
+    else:
+        return False
 
 def fill_end_week(app, week, year, month):
     if week[0][-1] + 7 > last_day_of_month(year, month): 

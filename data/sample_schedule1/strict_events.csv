@@ -1,0 +1,9 @@
+id,title,date,start_time,end_time,description
+SE-1,eating,2010-11-11,13:00,15:00,eating
+SE-2,napping,2017-12-12,14:00,16:00,nap
+SE-4,homework,2021-04-18,2:00,3:00,hw
+SE-3,partying,2021-04-18,16:00,18:00,party
+SE-10,eating,2021-04-19,3:00,4:00,eat
+SE-6,sleep,2021-04-19,18:00,19:00,sleeping
+SE-5,fun,2021-04-20,2:00,7:30,having fun
+SE-11,fun,2021-04-20,12:00,13:30,having fun
