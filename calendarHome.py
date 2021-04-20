@@ -9,7 +9,7 @@ from calendarDraw import *
 ##############################
 
 def calendarHome_keyPressed(app, event):
-    if app.typing:
+    if app.typing and type(app.text_box) == NumTextBox:
         typing_event(app, event)
         return
     if event.key == "Up" and app.firstHour > 0:

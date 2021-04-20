@@ -8,8 +8,10 @@ def reset_typing_setting(app):
 def typing_event(app, event):
     if event.key == "Delete" and len(app.typed_word) > 0:
         app.typed_word = app.typed_word[:-1]
-    elif (app.text_box.get_valid_characters() != True and
-    event.key in app.text_box.get_valid_characters()):
+    elif app.text_box.get_valid_characters() != True:
+        if event.key in app.text_box.get_valid_characters():
+            app.typed_word += event.key
+    else:
         app.typed_word += event.key
     if app.text_box.name == "month" or app.text_box.name == "day":
         app.typed_word = app.typed_word[:2]

@@ -73,6 +73,7 @@ def is_later_event(event1, event2):
     event2['start_time']))
 
 def merge(a, start1, start2, end):
+    #sorting algorithm adapted from https://www.cs.cmu.edu/~112/notes/notes-efficiency.html#sorting
     index1 = start1
     index2 = start2
     length = end - start1

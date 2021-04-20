@@ -1,7 +1,0 @@
-date, time_start, time_end, title, description
-2021-04-18, 8:00, 9:00, Study, Study Bio 
-2021-04-19, 12:00, 13:00, Eat, Eat Dinner
-2021-04-21, 7:00, 8:00, Study, Study Bio 
-2021-04-21, 23:00, 00:00, Eat, Eat Dinner
-2021-04-21, 11:00, 12:00, Study, Study Bio 
-2021-04-22, 12:00, 13:00, Eat, Eat Dinner

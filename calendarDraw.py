@@ -85,8 +85,9 @@ def draw_cells(app, canvas, x0, y0, x1, y1):
 def draw_week_view_calendar(app, canvas):
     x0, y0, x1, y1 = calendar_view_manager(app, "calendar")
     canvas.create_rectangle(x0, y0, x1, y1, fill="lightblue", width=0)
-    draw_cells(app, canvas, x0, y0, x1, y1)
     draw_times(app, canvas, x0, y0, x1, y1)
+    draw_cells(app, canvas, x0, y0, x1, y1)
+    
 
 def draw_week_view(app, canvas):
     draw_week_view_title(app, canvas)
