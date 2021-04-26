@@ -1,9 +1,9 @@
 from cmu_112_graphics import *
 from calendarHome import *
-#from calendarLayout import *
 from date_functions import *
 import datetime
 from event_functions import *
+from flex_event_functions import *
 
 # CITATION: screen structure from https://www.cs.cmu.edu/~112/notes/notes-animations-part4.html
 
@@ -22,8 +22,8 @@ def calVariables(app):
     app.months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", 
     "Sept", "Oct", "Nov", "Dec"]
     app.weekdays = ["Sun", "Mon", "Tue", "Wed", "Th", "Fri", "Sat"]
-    app.currentDate = get_current_date()
-    app.yearRange = (2010, datetime.MAXYEAR)
+    app.currentDate = date.fromisoformat('2021-04-18')#get_current_date()
+    app.yearRange = (datetime.MINYEAR, datetime.MAXYEAR)
     app.monthRange = (1, 12)
     app.currentWeek = get_week(app, app.currentDate.year, app.currentDate.month, 
     app.currentDate.day)
@@ -57,5 +57,6 @@ def appStarted(app):
     calVariables(app)
     calendarLayoutVariables(app)
     app.schedule = construct_strict_schedule(app) #temporary
+    generate_flexible_schedule('sample_schedule1', app.schedule, app.currentWeek)
 
 runApp(width=500, height=800)

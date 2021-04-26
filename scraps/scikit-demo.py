@@ -6,30 +6,25 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn import tree
-#https://randerson112358.medium.com/python-logistic-regression-program-5e1b32f964db
-#https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
-#https://scikit-learn.org/stable/modules/tree.html#classification
-
+'''learned how to use sklearn functions using these functions
+1) this is where I learned how to structure the learning and predicting model in code
+https://randerson112358.medium.com/python-logistic-regression-program-5e1b32f964db
+2) this is where I learned about the function used in the project 
+https://scikit-learn.org/stable/modules/tree.html#classification
+'''
 y  = pd.read_csv("test.csv", usecols=['mood']) 
 X = pd.read_csv("test.csv", usecols=['day', "time"]) 
+#learned to read the csv with https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html
 
 x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 model = tree.DecisionTreeClassifier()
 model.fit(x_train, y_train) #Training the model
 predictions = model.predict(x_test)
-
 print("PREDICTIONS")
 print(x_test)
-print(predictions)# printing predictions
-
-print()# Printing new line
-
-#Check precision, recall, f1-score
-print( classification_report(y_test, predictions) )
-
-print( accuracy_score(y_test, predictions))
-
+print(predictions)
 '''
+
 y  = pd.read_csv("test.csv", usecols=['mood']) 
 X = pd.read_csv("test.csv", usecols=['day', "time"]) 
 
@@ -79,6 +74,7 @@ def keyPressed(app, event):
         print(app.selectItemIndexTime)
         d = {'day': [app.selectItemIndexDays + 1], 'time': [app.times[app.selectItemIndexTime]]}
         x = pd.DataFrame(data=d)
+        #https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
         app.result = model.predict(x)[0]
 
 def draw_days(app, canvas):

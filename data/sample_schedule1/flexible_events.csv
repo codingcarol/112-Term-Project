@@ -1,3 +1,5 @@
-id, title, recurring_start, recurring_end, duration, recurrence_type, description
-FE-3, nap, 2021-04-18, 2022-04-20, 1:00, daily, one hour nap
-FE-1, facetime, 2021-04-20, 2022-04-20, 2:15, weekly, call friends
+id,title,recurring_start,recurring_end,duration,recurrence_type,description
+FE-3,nap,2021-04-18,2022-04-20,1:00,daily,one hour nap
+FE-1,facetime,2021-04-20,2022-04-20,2:15,weekly,call friends
+FE-2,video game,2021-04-25,2022-04-20,4:00,weekly,play game
+FE-5,draw,2021-04-25,2021-04-20,3:00,weekly,draw picture
