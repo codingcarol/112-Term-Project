@@ -82,14 +82,14 @@ def get_event_bounds(app, cal_event, x0, y0, x1, y1):
     end_time = cal_event['end_time']
     app_hours = app.hours[app.firstHour:app.lastHour + 1]
     shown_hours = to_24_hr_time(app_hours)
-    if (is_time_greater(end_time, shown_hours[0]) and 
-    is_time_greater(shown_hours[0], start_time)):
+    if (is_time_greater_or_eq(end_time, shown_hours[0]) and 
+    is_time_greater_or_eq(shown_hours[0], start_time)):
         start_time = shown_hours[0]
-    elif (is_time_greater(end_time, shown_hours[-1]) and
-    is_time_greater(shown_hours[-1], start_time)):
+    elif (is_time_greater_or_eq(end_time, shown_hours[-1]) and
+    is_time_greater_or_eq(shown_hours[-1], start_time)):
         end_time = shown_hours[-1]
-    elif (is_time_greater(shown_hours[-1], end_time) and
-    is_time_greater(start_time, shown_hours[0])):
+    elif (is_time_greater_or_eq(shown_hours[-1], end_time) and
+    is_time_greater_or_eq(start_time, shown_hours[0])):
         pass
     else: 
         return None

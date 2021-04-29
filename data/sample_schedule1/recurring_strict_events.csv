@@ -1,5 +1,6 @@
 id,title,recurring_start,recurring_end,exceptions,start_time,end_time,recurrence_type,recurrence_time,description
 RE-1,showering,2021-04-17,2022-04-17,,1:00,2:00,daily,N/A,shower
-RE-5,clean,2021-04-19,2021-04-28,,5:00,6:00,weekly,Sun-Mon-Sat,clean up
+FE-5,clean,2021-04-19,2021-04-28,,5:00,6:00,weekly,Sun-Mon-Sat,clean up
+FE-6,clean,2021-04-19,2021-04-28,,6:30,7:00,weekly,Sun-Mon-Sat,clean up
 RE-2,tv,2021-04-20,2022-04-20,,20:00,23:00,monthly,20,watch tv
 RE-3,hi,2021-04-20,2022-04-20,,0:00,1:00,yearly,4-23,say hi

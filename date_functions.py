@@ -152,9 +152,9 @@ def to_24_hr_time(times_list):
                 new_times.append(str(t_index) + ":" + t.split(" ")[0].split(":")[1])
     return new_times
 
-def is_time_greater(t1, t2):
+def is_time_greater_or_eq(t1, t2):
     #checks if the first time is greater than or equal to the second time
-    if get_time_index(t1) >= get_time_index(t2):
+    if get_time_index(t1) > get_time_index(t2):
         return True
     elif (get_time_index(t1) == get_time_index(t2) and 
     int(t1.split(":")[1]) >= int(t2.split(":")[1])):
@@ -163,7 +163,7 @@ def is_time_greater(t1, t2):
         return False
 
 def is_strictly_time_greater(t1, t2):
-    #checks if the first time is greater than or equal to the second time
+    #checks if the first time is greater than to the second time
     if get_time_index(t1) > get_time_index(t2):
         return True
     elif (get_time_index(t1) == get_time_index(t2) and 
@@ -174,16 +174,17 @@ def is_strictly_time_greater(t1, t2):
 
 def times_overlap(t1_start, t1_end, t2_start, t2_end):
     #returns True if the times overlap
-    if (is_time_greater(t2_start,t1_start) and 
+    if (is_time_greater_or_eq(t2_start,t1_start) and 
     is_strictly_time_greater(t1_end, t2_start)):
-        return True
+        return True 
     elif (is_strictly_time_greater(t2_end, t1_start) and 
-    is_time_greater(t1_end,t2_end)):
+    is_time_greater_or_eq(t1_end,t2_end)):
         return True
     return False
 
-def duration_time_time(t, duration):
+def add_duration_to_time(t, duration):
     #adds to duration to time to get the end time
+    #t and duration format is hours:minutes
     t_hour, t_minutes = t.split(":")
     duration_hours, duration_minutes = duration.split(":")
     t_hour = int(t_hour)
@@ -202,14 +203,77 @@ def duration_time_time(t, duration):
         same_day = False
     new_time = f'{new_hour}:{new_minutes}'
     if new_minutes < 10:
-        new_time += "0"
+        new_time = new_time.split(":")[0] + ":0" + new_time.split(":")[1]
     return (same_day, new_time)
+
+
+def subtract_duration_from_time(t, duration):
+    #adds to duration to time to get the end time
+    #t and duration format is hours:minutes
+    t_hour, t_minutes = t.split(":")
+    duration_hours, duration_minutes = duration.split(":")
+    t_hour = int(t_hour)
+    t_minutes = int(t_minutes)
+    duration_hours = int(duration_hours)
+    duration_minutes = int(duration_minutes)
+    extra_hour = 0
+    new_minutes = t_minutes - duration_minutes
+    if t_minutes - duration_minutes < 0:
+        extra_hour += 1
+        new_minutes = 60 - abs(t_minutes - duration_minutes)
+    new_hour = t_hour - duration - 5
+    same_day = True
+    if new_hour >= 24:
+        new_hour %= 24
+        same_day = False
+    new_time = f'{new_hour}:{new_minutes}'
+    if new_minutes < 10:
+        new_time = new_time.split(":")[0] + ":0" + new_time.split(":")[1]
+    return (same_day, new_time)
+
+def find_duration_between(start_time, end_time): #also means subtraction
+    #adds to duration to time to get the end time
+    #t and duration format is hours:minutes
+    #assumes that start and end are the same day
+    if is_strictly_time_greater(start_time, end_time): 
+        start_time, end_time = end_time, start_time
+    start_hour, start_minutes = start_time.split(":")
+    end_hour, end_minutes = end_time.split(":")
+    start_hour = int(start_hour)
+    start_minutes = int(start_minutes)
+    end_hour = int(end_hour)
+    end_minutes = int(end_minutes)
+    extra_hour = 0
+    new_minutes = end_minutes - start_minutes
+    if start_minutes > end_minutes:
+        new_minutes = 60 - abs(end_minutes - start_minutes)
+        extra_hour += 1
+    new_hour = end_hour - start_hour - extra_hour
+    same_day = True
+    if new_hour < 0:
+        new_hour = 24 + new_hour
+        same_day = False
+    duration = f'{new_hour}:{new_minutes}'
+    if new_minutes < 10:
+        duration = duration.split(":")[0] + ":0" + duration.split(":")[1]
+    return duration
+
+def get_overlap_time(t1_start, t1_end, t2_start, t2_end):
+    if not times_overlap(t1_start, t1_end, t2_start, t2_end): return None
+    if (is_time_greater_or_eq(t2_start,t1_start) and 
+    is_strictly_time_greater(t1_end, t2_start)):
+        return find_duration_between(t2_start, t1_end)
+    elif (is_strictly_time_greater(t2_end, t1_start) and 
+    is_time_greater_or_eq(t1_end,t2_end)):
+        return find_duration_between(t1_start, t2_end)
+    return None
+print(get_overlap_time("5:00", "6:00", "5:29", "6:29"))
 
 def get_half_hour_between(start_time, end_time):
     #gets times between the start and end time very half hour
     start_time = get_nearest_lower_half_hour(start_time)
     end_time = get_nearest_upper_half_hour(end_time)
-    if is_time_greater(start_time, end_time):
+    if is_time_greater_or_eq(start_time, end_time):
         return None 
     hour = start_time
     hours = [start_time]
@@ -219,10 +283,50 @@ def get_half_hour_between(start_time, end_time):
         hours.append(hour)
         count += 1
     return hours
-'''
-def is_time_between(start_date, start_time, end_date, end_time, test_date, test_time):
-    #takes strings of date and time and checks if the test date is between the start and end
-    start_date = date(start)'''
+
+def get_times_between(start_time, end_time, duration, include_start):
+    #get the times between, returns empty list if goes start_time + duration goes past midnight
+    times_between = []
+    same_day, current_time_between = add_duration_to_time(start_time, "00:01")
+    same_day2, new_end_time = add_duration_to_time(current_time_between, duration)
+    if include_start:
+        times_between.insert(0, start_time)
+    if not same_day: return times_between
+    while is_strictly_time_greater(end_time, new_end_time):
+        times_between.append(current_time_between)
+        same_day, new_time = add_duration_to_time(current_time_between, "00:01")
+        same_day2, new_end_time = add_duration_to_time(current_time_between, duration)
+        if not same_day:
+            break
+        current_time_between = new_time
+    return times_between
+
+def weave_values(list1, list2):
+    #starts with list1 value
+    new_list = []
+    i = 0
+    for i in range((min(len(list1), len(list2)))):
+        new_list.append(list1[i])
+        new_list.append(list2[i])
+    if len(list1) - 1 != i:
+        new_list += (list1[i+1:])
+    elif len(list2) - 1 != i:
+        new_list += (list2[i+1:])
+    return new_list
+
+def get_times_within_fifteen_min(t):
+    #finds the times within fifteen minutes
+    #if goes over midnight or before midnight, defaults to 00:00 times
+    if is_time_greater_or_eq(t, "00:16"):
+        lower_time = find_duration_between(t, "00:15") #lower times
+    else:
+        lower_time = "00:00"
+    same_day, higher_time = add_duration_to_time(t, "00:15")
+    if not same_day:
+        higher_time = "24:00"
+    lowers = get_times_between(lower_time, t, "00:01", True)[::-1]
+    highers = get_times_between(t, higher_time, "00:01", True)
+    return weave_values(highers, lowers)
 
 def fill_end_week(app, week, year, month):
     if week[0][-1] + 7 > last_day_of_month(year, month): 
