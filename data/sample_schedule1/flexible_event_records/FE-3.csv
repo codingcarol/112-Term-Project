@@ -21,3 +21,4 @@ date,weekday,time_started,time_ended,missed/present,mood
 2021-04-21,fri,5:00,6:00,present,8
 2021-04-22,sat,7:00,8:00,missed,1
 2021-04-21,sun,18:00,19:00,missed,8
+2021-04-20,tue,3:30,4:30,present,10
